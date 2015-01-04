@@ -3,7 +3,7 @@
 [![Code Climate](https://d3s6mut3hikguw.cloudfront.net/github/rschmukler/agenda.png)](https://codeclimate.com/github/rschmukler/agenda/badges)
 [![Coverage Status](https://coveralls.io/repos/rschmukler/agenda/badge.png)](https://coveralls.io/r/rschmukler/agenda)
 
-Agenda is a light-weight job scheduling library for Node.js.
+agenda-n is a light-weight job scheduling library for Node.js based on rschmukler's agenda.
 
 It offers:
 
@@ -12,7 +12,6 @@ It offers:
 - Scheduling with configurable priority, concurrency, and repeating
 - Scheduling via cron or human readable syntax.
 - Event backed job queue that you can hook into.
-- Optional standalone web-interface (see [agenda-ui](https://github.com/moudy/agenda-ui))
 
 # Installation
 
