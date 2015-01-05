@@ -45,6 +45,65 @@ agenda.start();
 
 - Logs
 
+```js
+
+var Agenda = require('agenda-n');
+
+agenda = new Agenda({
+  db: {
+    address: 'mongodb://localhost:27017/agenda'
+  },
+  logs: {
+    address: 'mongodb://localhost:27017/agenda',
+    collection: 'agendalogs'
+  }
+});
+
+```
+
 - Configuration file conf.js created
 
+```js
+
+/** Attrs */
+var attrs = {
+    type : {
+        once: 'once',
+        single: 'single',
+        normal: 'normal'
+      } 
+};
+
+/** Conf defaults */
+var conf = {
+    default : {
+        lockTime: 10 * 60 * 1000,
+        concurrency: 5,
+        maxConcurrency: 20,
+        processEvery: '5 seconds',
+        dbName: 'agendaJobs'
+      } 
+};
+
+/** Messages */
+var msg = {
+    fail : {
+        invalidRepeat: 'failed to calculate nextRunAt due to invalid repeat interval',
+        invalidFormat: 'failed to calculate repeatAt time due to invalid format',
+        undefinedJob: 'Undefined job'
+      } 
+};
+
+```
+
 - single job types: two jobs with same name but different data will generate two separate records.
+
+```js
+
+/** Job 1 */
+agenda.every('minute','start update events info', {league: 1});
+
+/** Job 2 */
+agenda.every('minute','start update events info', {league: 2});
+
+```
