@@ -1,3 +1,8 @@
+0.0.10 / 2015-01-18 
+==================
+
+ * when fail, instance of object (not error or string), stringify
+
 0.0.9 / 2015-01-18 
 ==================
 
