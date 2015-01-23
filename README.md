@@ -116,19 +116,3 @@ agenda.every('minute','start update events info', {league: 1});
 agenda.every('minute','start update events info', {league: 2});
 
 ```
-
-- log activity to MongoDB.
-
-```js
-
-agenda = new Agenda({
-  db: {
-    ...
-  },
-    logs: {
-    address: "mongodb address",
-    collection: "agendalogs..."
-  },
-});
-
-```
