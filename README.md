@@ -1,17 +1,26 @@
 # Agenda
-[![Build Status](https://api.travis-ci.org/rschmukler/agenda.png)](http://travis-ci.org/rschmukler/agenda)
-[![Code Climate](https://d3s6mut3hikguw.cloudfront.net/github/rschmukler/agenda.png)](https://codeclimate.com/github/rschmukler/agenda/badges)
-[![Coverage Status](https://coveralls.io/repos/rschmukler/agenda/badge.png)](https://coveralls.io/r/rschmukler/agenda)
+[![Build Status](https://api.travis-ci.org/elmurci/agenda-n.png)](http://travis-ci.org/elmurci/agenda-n)
+[![Code Climate](https://d3s6mut3hikguw.cloudfront.net/github/elmurci/agenda-n.png)](https://codeclimate.com/github/elmurci/agenda-n/badges)
+[![Coverage Status](https://coveralls.io/repos/elmurci/agenda-n/badge.png)](https://coveralls.io/r/elmurci/agenda-n)
 
-agenda-n is a light-weight job scheduling library for Node.js based on rschmukler's agenda.
+agenda-n is a light-weight job scheduling library for Node.js based on the brilliant [rschmukler's agenda](https://github.com/rschmukler/agenda).
+Due to my own project needs, had to quickly develop the following a few extra functionalities and thought it would be nice to share them just in case anyone wants to use them.
 
-It offers:
+[rschmukler's agenda](https://github.com/rschmukler/agenda) offers:
 
 - Minimal overhead. Agenda aims to keep its code base small.
 - Mongo backed persistance layer.
 - Scheduling with configurable priority, concurrency, and repeating
 - Scheduling via cron or human readable syntax.
 - Event backed job queue that you can hook into.
+
+On top of those, I have added:
+
+- Start and end date for jobs
+- Configuration file
+- single job types: two jobs with same name but different data will generate two separate records.
+- Possibility of switching on logging feature
+- COMING SOON: dashboard with latest executions, number of jobs running, future executions...
 
 # Installation
 
@@ -23,7 +32,7 @@ You will also need a working [mongo](http://www.mongodb.org/) database (2.4+) to
 
 # Documentation
 
-This package is based on rschmukler's agenda, see docs.
+This package is based on [rschmukler's agenda](https://github.com/rschmukler/agenda), see [docs](https://github.com/rschmukler/agenda).
 
 # New features
 
@@ -105,5 +114,21 @@ agenda.every('minute','start update events info', {league: 1});
 
 /** Job 2 */
 agenda.every('minute','start update events info', {league: 2});
+
+```
+
+- log activity to MongoDB.
+
+```js
+
+agenda = new Agenda({
+  db: {
+    ...
+  },
+    logs: {
+    address: "mongodb address",
+    collection: "agendalogs..."
+  },
+});
 
 ```
