@@ -1,3 +1,8 @@
+0.0.12 / 2015-01-24
+==================
+
+ * log results only if log conf is provided plus test cases
+
 0.0.11 / 2015-01-19 
 ==================
 

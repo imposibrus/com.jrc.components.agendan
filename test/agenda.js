@@ -6,16 +6,34 @@ var mongoCfg = 'localhost:27017/agenda-test',
     cp = require('child_process'),
     mongo = require('mongoskin').db('mongodb://' + mongoCfg, {w: 0}),
     Agenda = require( path.join('..', 'index.js') ),
+    mongoJobsCollection = 'agendajobs',
+    mongoLogsCollection = 'agendalogs',
     jobs = new Agenda({
       defaultConcurrency: 5,
       db: {
-        address: mongoCfg
+        address: mongoCfg,
+        collection: mongoJobsCollection
+      }
+    }),
+    jobsWithLogs = new Agenda({
+      defaultConcurrency: 5,
+      db: {
+        address: mongoCfg,
+        collection: mongoJobsCollection
+      },
+      logs: {
+        address: mongoCfg,
+        collection: mongoLogsCollection
       }
     }),
     Job = require( path.join('..', 'lib', 'job.js') );
 
 function clearJobs(done) {
-  mongo.collection('agendaJobs').remove({}, done);
+  mongo.collection(mongoJobsCollection).remove({}, done);
+}
+
+function clearLogs(done) {
+  mongo.collection(mongoLogsCollection).remove({}, done);
 }
 
 // Slow timeouts for travis
@@ -28,6 +46,7 @@ before(function() {
   jobs.define('someJob', jobProcessor);
   jobs.define('send email', jobProcessor);
   jobs.define('some job', jobProcessor);
+  jobsWithLogs.define('some job for logs', jobProcessor);
 });
 
 describe('Agenda', function() {
@@ -278,7 +297,7 @@ describe('Agenda', function() {
           var time = new Date();
           jobs.create('unique job', {type: 'active', userId: '123', 'other': true}).unique({'data.type': 'active', 'data.userId': '123', nextRunAt: time}).schedule(time).save(function(err, job) {
            jobs.create('unique job', {type: 'active', userId: '123', 'other': false}).unique({'data.type': 'active', 'data.userId': '123', nextRunAt: time}).schedule(time).save(function(err, job) {
-              mongo.collection('agendaJobs').find({name: 'unique job'}).toArray(function(err, j) {
+              mongo.collection(mongoJobsCollection).find({name: 'unique job'}).toArray(function(err, j) {
                 expect(j).to.have.length(1);
                 done();
               });
@@ -297,7 +316,7 @@ describe('Agenda', function() {
         
           jobs.create('unique job', {type: 'active', userId: '123', 'other': true}).unique({'data.type': 'active', 'data.userId': '123', nextRunAt: time}).schedule(time).save(function(err, job) {
            jobs.create('unique job', {type: 'active', userId: '123', 'other': false}).unique({'data.type': 'active', 'data.userId': '123', nextRunAt: time2}).schedule(time).save(function(err, job) {
-              mongo.collection('agendaJobs').find({name: 'unique job'}).toArray(function(err, j) {
+              mongo.collection(mongoJobsCollection).find({name: 'unique job'}).toArray(function(err, j) {
                 expect(j).to.have.length(2);
                 done();
               });
@@ -617,7 +636,7 @@ describe('Job', function() {
         if(err) return done(err);
         job.remove(function(err) {
           if(err) return done(err);
-          mongo.collection('agendaJobs').find({_id: job.attrs._id}).toArray(function(err, j) {
+          mongo.collection(mongoJobsCollection).find({_id: job.attrs._id}).toArray(function(err, j) {
             expect(j).to.have.length(0);
             done();
           });
@@ -671,7 +690,7 @@ describe('Job', function() {
     it('handles errors', function(done) {
       job.attrs.name = 'failBoat';
       jobs.define('failBoat', function(job, cb) {
-        throw(new Error("Zomg fail"));
+        throw(new Error('Zomg fail'));
       });
       job.run(function(err) {
         expect(err).to.be.ok();
@@ -932,12 +951,12 @@ describe('Job', function() {
     });
   });
 
-  describe("job lock", function(){
+  describe('job lock', function(){
 
-    it("runs job after a lock has expired", function(done) {
+    it('runs job after a lock has expired', function(done) {
       var startCounter = 0;
 
-      jobs.define("lock job", {lockLifetime: 50}, function(job, cb){
+      jobs.define('lock job', {lockLifetime: 50}, function(job, cb){
         startCounter++;
 
         if(startCounter != 1) {
@@ -946,7 +965,7 @@ describe('Job', function() {
         }
       });
 
-      expect(jobs._definitions["lock job"].lockLifetime).to.be(50);
+      expect(jobs._definitions['lock job'].lockLifetime).to.be(50);
 
       jobs.defaultConcurrency(100);
       jobs.processEvery(10);
@@ -957,7 +976,7 @@ describe('Job', function() {
 
   });
 
-  describe("every running", function() {
+  describe('every running', function() {
     before(function(done) {
       jobs.defaultConcurrency(1);
       jobs.processEvery(5);
@@ -1009,7 +1028,7 @@ describe('Job', function() {
     });
   });
 
-  describe("Integration Tests", function() {
+  describe('Integration Tests', function() {
 
     describe('.every()', function() {
 
@@ -1169,5 +1188,60 @@ describe('Job', function() {
       });
 
     });
+
+    describe('Logging feature', function() {
+
+      beforeEach(clearLogs);
+
+      it('Should log the success result', function(done) {
+        
+        var job = new Job({agenda: jobsWithLogs, name: 'some job for logs'});
+        job.run(function() {
+          mongo.collection(mongoLogsCollection).find({job: 'some job for logs'}).toArray(function(err, j) {
+            expect(j).to.have.length(1);
+            expect(j[0].result).to.equal('success');
+            done();
+          });
+        });
+
+      });
+
+      it('Should not log the success result', function(done) {
+        
+        var job = new Job({agenda: jobs, name: 'some job for logs'});
+        job.run(function() {
+          mongo.collection(mongoLogsCollection).find({job: 'some job for logs'}).toArray(function(err, j) {
+            expect(j).to.have.length(0);
+            done();
+          });
+        });
+
+      });
+
+      it('Should log the fail result', function(done) {
+        
+        var job = new Job({agenda: jobsWithLogs, name: 'some job for logs',data: {some: 'data'}});
+        job.fail('some error job for logs');
+        mongo.collection(mongoLogsCollection).find({job: 'some job for logs',data: {some: 'data'}}).toArray(function(err, j) {
+          expect(j).to.have.length(1);
+          expect(j[0].result).to.equal('error');
+          done();
+        });
+
+      });
+
+      it('Should not log the fail result', function(done) {
+        
+        var job = new Job({agenda: jobs, name: 'some job for logs',data: {some: 'data'}});
+        job.fail('some error job for logs');
+        mongo.collection(mongoLogsCollection).find({job: 'some job for logs',data: {some: 'data'}}).toArray(function(err, j) {
+          expect(j).to.have.length(0);
+          done();
+        });
+
+      });
+
+    });
+
   });
 });
