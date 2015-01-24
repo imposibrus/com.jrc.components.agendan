@@ -702,7 +702,7 @@ describe('Job', function() {
       jobs.define('failBoat2', function(job, cb) {
         var Q = require('q');
         Q.delay(100).then(function(){
-          throw(new Error("Zomg fail"));
+          throw(new Error('Zomg fail'));
         }).fail(cb).done();
       });
       job.run(function(err) {
@@ -829,8 +829,8 @@ describe('Job', function() {
     });
   });
 
-  describe("start/stop", function() {
-    it("starts/stops the job queue", function(done) {
+  describe('start/stop', function() {
+    it('starts/stops the job queue', function(done) {
       jobs.define('jobQueueTest', function jobQueueTest(job, cb) {
         jobs.stop(function() {
           clearJobs(function() {
@@ -1037,7 +1037,7 @@ describe('Job', function() {
 
         var serviceError = function(e) { done(e); };
         var receiveMessage = function(msg) {
-          if( msg == "ran" ) {
+          if( msg == 'ran' ) {
             expect(i).to.be(0);
             i += 1;
             startService();
@@ -1063,14 +1063,14 @@ describe('Job', function() {
 
         var serviceError = function(e) { done(e); };
         var receiveMessage = function(msg) {
-          if( msg == "test1-ran" ) {
+          if( msg == 'test1-ran' ) {
             ran1 = true;
             if( !!ran1 && !!ran2 && !doneCalled) {
               doneCalled = true;
               done();
               return n.send('exit');
             }
-          } else if( msg == "test2-ran") {
+          } else if( msg == 'test2-ran') {
             ran2 = true;
             if( !!ran1 && !!ran2 && !doneCalled) {
               doneCalled = true;
@@ -1142,14 +1142,14 @@ describe('Job', function() {
         var serviceError = function(e) { done(e); };
         var receiveMessage = function(msg) {
 
-          if( msg == "test1-ran" ) {
+          if( msg == 'test1-ran' ) {
             ran1 = true;
             if( !!ran1 && !!ran2 && !doneCalled) {
               doneCalled = true;
               done();
               return n.send('exit');
             }
-          } else if( msg == "test2-ran") {
+          } else if( msg == 'test2-ran') {
             ran2 = true;
             if( !!ran1 && !!ran2 && !doneCalled) {
               doneCalled = true;
@@ -1176,7 +1176,7 @@ describe('Job', function() {
         var receiveMessage = function(msg) {
           if( msg == 'ran' ) {
             return done();
-          } else return done( new Error("Job did not immediately run!") );
+          } else return done( new Error('Job did not immediately run!') );
         };
 
         var serverPath = path.join( __dirname, 'fixtures', 'agenda-instance.js' );
