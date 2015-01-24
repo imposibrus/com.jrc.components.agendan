@@ -20,8 +20,9 @@ On top of those, I have added:
 - Configuration file
 - single job types: two jobs with same name but different data will generate two separate records.
 - Possibility of switching on logging feature
-- COMING SOON: dashboard with latest executions, number of jobs running, future executions...
-  ![rsz_1screen_shot_2015-01-24_at_143552](https://cloud.githubusercontent.com/assets/3902198/5887682/171912f2-a3d7-11e4-9864-4e9ff2a4c98a.png =350x)
+- COMING SOON: dashboard with latest executions, number of jobs running, future executions... 
+
+![rsz_1rsz_1screen_shot_2015-01-24_at_143552](https://cloud.githubusercontent.com/assets/3902198/5887704/3db553c0-a3d8-11e4-8dfb-e4eabf8dd9d2.png)
 
 # Installation
 
