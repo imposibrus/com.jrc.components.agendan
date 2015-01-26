@@ -1,6 +1,6 @@
 {
   "name": "agenda-n",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "Light weight job scheduler for Node.js, based on agenda",
   "main": "index.js",
   "scripts": {
