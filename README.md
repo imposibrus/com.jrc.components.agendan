@@ -1,4 +1,4 @@
-# Agenda
+# agenda-n
 [![Build Status](https://api.travis-ci.org/elmurci/agenda-n.png)](http://travis-ci.org/elmurci/agenda-n)
 [![Code Climate](https://d3s6mut3hikguw.cloudfront.net/github/elmurci/agenda-n.png)](https://codeclimate.com/github/elmurci/agenda-n/badges)
 [![Coverage Status](https://coveralls.io/repos/elmurci/agenda-n/badge.png)](https://coveralls.io/r/elmurci/agenda-n)
@@ -17,10 +17,10 @@ Due to my own project needs, had to quickly develop the following a few extra fu
 On top of those, I have added:
 
 - Start and end date for jobs
-- Configuration file
+- Configuration file (doesn't improve anything but tidies up a little bit)
 - single job types: two jobs with same name but different data will generate two separate records.
-- Possibility of switching on logging feature
-- COMING SOON: dashboard with latest executions, number of jobs running, future executions... 
+- Possibility of switching on logging feature (to a Mongo DB Collection)
+- TODO: Currently working on a dashboard with latest executions, number of jobs running, future executions... 
 
 ![rsz_1rsz_1screen_shot_2015-01-24_at_143552](https://cloud.githubusercontent.com/assets/3902198/5887704/3db553c0-a3d8-11e4-8dfb-e4eabf8dd9d2.png)
 
