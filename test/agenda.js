@@ -649,10 +649,13 @@ describe('Job', function() {
     var job,
         definitions = jobs._definitions;
 
-    jobs.define('testRun', function(job, done) {
-      setTimeout(function() {
-        done();
-      }, 100);
+    before(function(cb) {
+      jobs.define('testRun', function(job, done) {
+        setTimeout(function() {
+          done();
+        }, 100);
+      });
+      cb();
     });
 
     beforeEach(function() {
