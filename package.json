@@ -1,6 +1,6 @@
 {
   "name": "agenda-n",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "description": "Light weight job scheduler for Node.js, based on agenda",
   "main": "index.js",
   "scripts": {
@@ -31,7 +31,6 @@
     "cron": "~1.0.1",
     "date.js": "~0.2.0",
     "human-interval": "~0.1.3",
-    "mongodb": "2.0.55",
     "mongoskin": "~2.0.3"
   },
   "devDependencies": {
@@ -40,6 +39,7 @@
     "mocha-lcov-reporter": "0.0.1",
     "coveralls": "~2.3.0",
     "blanket": "~1.1.5",
-    "q": "~1.0.0"
+    "q": "~1.0.0",
+    "mongodb": "2.0.55"
   }
 }
